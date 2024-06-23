@@ -2,17 +2,12 @@ use crate::token::Token;
 
 #[test]
 fn test_next_token() {
-    // const INPUT: &str = "let five = 5;";
-    const INPUT: &str = "5;";
+    const INPUT: &str = "let five = 5;";
 
     let mut tests = Vec::new();
-    // tests.push([Token::LET, "let"]);
-    // tests.push([Token::IDENT, "five"]);
-    // tests.push([Token::ASSIGN, "="]);
-    // tests.push([Token::INT, "5"]);
-    // tests.push([Token::SEMICOLON, ";"]);
-    // tests.push([Token::EOF, ""]);
-
+    tests.push([Token::LET, "let"]);
+    tests.push([Token::IDENT, "five"]);
+    tests.push([Token::ASSIGN, "="]);
     tests.push([Token::INT, "5"]);
     tests.push([Token::SEMICOLON, ";"]);
     tests.push([Token::EOF, ""]);
@@ -147,11 +142,13 @@ impl Lexer {
                     let literal = self.read_identifier();
                     let token_type = Token::lookup_ident(&literal);
                     tok = Token::new(token_type, literal);
+                    return tok;
                 } else if Lexer::is_digit(self.ch) {
                     let literal = self.read_number();
                     tok = Token::new(Token::INT, literal);
+                    return tok;
                 } else {
-                    tok = Token::new(Token::ILLEGAL, &self.ch.to_string());
+                    tok = Token::new(Token::ILLEGAL, &self.ch.to_string())
                 }
             }
         }
