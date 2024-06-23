@@ -9,9 +9,9 @@ pub struct Lexer {
 }
 
 impl Lexer {
-    pub fn new(input: String) -> Self {
+    pub fn new(input: &str) -> Self {
         let mut l = Lexer {
-            input,
+            input: input.to_string(),
             position: 0,
             read_position: 0,
             ch: '\0',
@@ -68,7 +68,7 @@ impl Lexer {
         }
     }
 
-    fn next_token(&mut self) -> Token {
+    pub fn next_token(&mut self) -> Token {
         let tok: Token;
 
         self.skip_whitespace();
@@ -137,7 +137,7 @@ fn test_next_token() {
     tests.push([Token::SEMICOLON, ";"]);
     tests.push([Token::EOF, ""]);
 
-    let mut l = Lexer::new(INPUT.to_string());
+    let mut l = Lexer::new(INPUT);
 
     for (i, tt) in tests.iter().enumerate() {
         let tok = l.next_token();
