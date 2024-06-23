@@ -49,16 +49,19 @@ impl Token {
     pub const EQ: &'static str = "==";
     pub const NOT_EQ: &'static str = "!=";
 
-    pub fn new(token_type: &str, literal: String) -> Token {
+    pub fn new(token_type: &str, literal: &str) -> Token {
         Token {
             token_type: token_type.to_string(),
-            literal,
+            literal: literal.to_string(),
         }
     }
 
-    pub fn lookup_ident(ident: &str) -> String {
-        let token = *KEYWORDS.get(ident).unwrap();
+    pub fn lookup_ident(ident: &str) -> &str {
+        let token = KEYWORDS.get(ident);
 
-        token.to_string()
+        match token {
+            Some(token) => token,
+            None => Token::IDENT,
+        }
     }
 }
