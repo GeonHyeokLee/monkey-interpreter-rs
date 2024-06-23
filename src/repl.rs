@@ -1,3 +1,5 @@
+use std::process;
+
 use rustyline::DefaultEditor;
 
 use crate::{lexer::Lexer, token::Token};
@@ -20,7 +22,7 @@ pub fn start() {
                 }
             }
             Err(_) => {
-                panic!();
+                process::exit(0);
             }
         }
     }

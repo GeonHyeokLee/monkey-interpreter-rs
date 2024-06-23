@@ -13,7 +13,7 @@ fn main() {
             "\nHello {}! This is the Monkey programming language!",
             user.name().to_string_lossy()
         );
-        println!("Feel free to type in commands\n");
+        println!("Feel free to type in commands");
         repl::start();
     } else {
         panic!()
