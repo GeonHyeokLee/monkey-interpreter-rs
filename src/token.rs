@@ -32,7 +32,7 @@ impl Token {
     pub const BANG: &'static str = "!";
     pub const ASTERISK: &'static str = "*";
     pub const SLASH: &'static str = "/";
-    pub const COMMA: &'static str = ";";
+    pub const COMMA: &'static str = ",";
     pub const SEMICOLON: &'static str = ";";
     pub const LT: &'static str = "<";
     pub const GT: &'static str = ">";

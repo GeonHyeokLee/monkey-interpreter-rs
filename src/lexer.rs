@@ -1,5 +1,39 @@
 use crate::token::Token;
 
+#[test]
+fn test_next_token() {
+    // const INPUT: &str = "let five = 5;";
+    const INPUT: &str = "5;";
+
+    let mut tests = Vec::new();
+    // tests.push([Token::LET, "let"]);
+    // tests.push([Token::IDENT, "five"]);
+    // tests.push([Token::ASSIGN, "="]);
+    // tests.push([Token::INT, "5"]);
+    // tests.push([Token::SEMICOLON, ";"]);
+    // tests.push([Token::EOF, ""]);
+
+    tests.push([Token::INT, "5"]);
+    tests.push([Token::SEMICOLON, ";"]);
+    tests.push([Token::EOF, ""]);
+
+    let mut l = Lexer::new(INPUT);
+
+    for (i, tt) in tests.iter().enumerate() {
+        let tok = l.next_token();
+        assert_eq!(
+            tok.token_type, tt[0],
+            "tests[{}] - tokentype wrong. expected={}, got={}",
+            i, tt[0], tok.token_type
+        );
+        assert_eq!(
+            tok.literal, tt[1],
+            "tests[{}] - literal wrong. expected={}, got={}",
+            i, tt[1], tok.literal
+        );
+    }
+}
+
 #[derive(Debug)]
 pub struct Lexer {
     input: String,
@@ -12,8 +46,8 @@ impl Lexer {
     pub fn new(input: &str) -> Self {
         let mut l = Lexer {
             input: input.to_string(),
-            position: 0,
-            read_position: 0,
+            position: usize::MIN,
+            read_position: usize::MIN,
             ch: '\0',
         };
         l.read_char();
@@ -24,7 +58,8 @@ impl Lexer {
         if self.read_position >= self.input.len() {
             self.ch = '\0';
         } else {
-            self.ch = self.input.chars().nth(self.read_position).unwrap();
+            let ch = self.input.chars().nth(self.read_position).unwrap();
+            self.ch = ch;
         }
         self.position = self.read_position;
         self.read_position += 1
@@ -111,9 +146,10 @@ impl Lexer {
                 if Lexer::is_letter(self.ch) {
                     let literal = self.read_identifier();
                     let token_type = Token::lookup_ident(&literal);
-                    tok = Token::new(token_type, literal)
+                    tok = Token::new(token_type, literal);
                 } else if Lexer::is_digit(self.ch) {
-                    tok = Token::new(Token::INT, self.read_number())
+                    let literal = self.read_number();
+                    tok = Token::new(Token::INT, literal);
                 } else {
                     tok = Token::new(Token::ILLEGAL, &self.ch.to_string());
                 }
@@ -122,34 +158,5 @@ impl Lexer {
 
         self.read_char();
         tok
-    }
-}
-
-#[test]
-fn test_next_token() {
-    const INPUT: &str = "let five = 5 ;";
-
-    let mut tests = Vec::new();
-    tests.push([Token::LET, "let"]);
-    tests.push([Token::IDENT, "five"]);
-    tests.push([Token::ASSIGN, "="]);
-    tests.push([Token::INT, "5"]);
-    tests.push([Token::SEMICOLON, ";"]);
-    tests.push([Token::EOF, ""]);
-
-    let mut l = Lexer::new(INPUT);
-
-    for (i, tt) in tests.iter().enumerate() {
-        let tok = l.next_token();
-        assert_eq!(
-            tok.token_type, tt[0],
-            "tests[{}] - tokentype wrong. expected={}, got={}",
-            i, tt[0], tok.token_type
-        );
-        assert_eq!(
-            tok.literal, tt[1],
-            "tests[{}] - literal wrong. expected={}, got={}",
-            i, tt[1], tok.literal
-        );
     }
 }
