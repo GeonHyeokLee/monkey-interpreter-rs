@@ -2,7 +2,7 @@ use std::process;
 
 use rustyline::DefaultEditor;
 
-use crate::{lexer::Lexer, token::Token};
+use crate::{lexer::Lexer, token::TokenType};
 
 pub fn start() {
     let mut rl = DefaultEditor::new().unwrap();
@@ -15,7 +15,7 @@ pub fn start() {
 
                 loop {
                     let tok = l.next_token();
-                    if tok.token_type == Token::EOF {
+                    if tok.token_type == TokenType::Eof {
                         break;
                     }
                     println!("{:?}", tok);
